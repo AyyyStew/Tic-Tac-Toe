@@ -15,5 +15,12 @@ const player = function(name, symbol){
 }
 
 const gamePlay = function(){
-    
+    let symbol = "x"
+    for (let x of document.getElementsByClassName("space")){
+        x.addEventListener("click", ()=>{
+            x.innerHTML = symbol
+        })
+    }
 }()
+
+
