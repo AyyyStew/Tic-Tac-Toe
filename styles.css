@@ -1,0 +1,45 @@
+
+.gameboard{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+
+    width: 40vw;
+    height: 40vw;
+
+    margin: 0 auto;
+}
+
+.space{
+    border-color: #000000;
+    --grid-width : .5vh solid;
+    background-color: coral
+}
+
+.space:hover{
+    filter: brightness(155%)
+}
+
+.space:nth-child(5){
+    border: var(--grid-width)
+}
+
+.space:nth-child(2){
+    border-left: var(--grid-width);
+    border-right: var(--grid-width);
+}
+
+.space:nth-child(4){
+    border-top: var(--grid-width);
+    border-bottom: var(--grid-width);
+}
+
+.space:nth-child(6){
+    border-top: var(--grid-width);
+    border-bottom: var(--grid-width);
+}
+
+.space:nth-child(8){
+    border-left: var(--grid-width);
+    border-right: var(--grid-width);
+}
