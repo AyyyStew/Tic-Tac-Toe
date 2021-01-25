@@ -1,0 +1,37 @@
+.formWrapper{
+    background-color: orange;
+    width: 100vw;
+    height: 100vh;
+}
+
+#playerSetupForm{
+    border: 1px solid red;
+
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+
+    background-color: chocolate;
+    width: 50%;
+    height: 50%;
+    margin: auto 25%;
+}
+
+#playerSetupForm>div{
+    /* display: inline-block; */
+    display: flex;
+    flex-direction: column;
+}
+
+#playerSetupForm>div>label{
+    margin-bottom: 2%;
+}
+
+
+#playerSetupForm>*{
+    width: 90%;
+    max-width: 400px;
+    margin-top: 2%;
+}
