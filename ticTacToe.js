@@ -8,8 +8,8 @@ const gameView = function(){
             space.innerHTML = ""
 
             space.addEventListener("click", ()=>{
-                console.log(space)
                 let symbol = gamePlay.playTurn(space.dataset.index)
+                console.log(symbol)
                 if (symbol !== undefined){
                     space.innerHTML = symbol
                 } else{
@@ -24,17 +24,28 @@ const gameView = function(){
         gameStatus.innerHTML = msg
     }
 
+    //accept player object or draw
+    const gameOver = (result) =>{
+        if (result === "Draw") {
+            setGameStatus(result) 
+        } else{
+            setGameStatus(`${result.name} won! representing ${result.symbol}`)
+        }
+
+    }
 
     return {
         initializeBoard,
         setGameStatus,
-        // gameOver,
-        // setPlayer,
+        gameOver,
     }    
 }()
 
 const gameboard = function (){
-    let spaces = new Array(9)
+    const rowSize = 3
+    const numberForWin = 3
+    let spaces = new Array(rowSize**2)
+
     const placePiece = (symbol, space) =>{
         if (spaces[space] !== undefined){
             return undefined
@@ -45,7 +56,70 @@ const gameboard = function (){
     }
 
     const checkForWinner = (symbol) =>{
-        return
+        const checkColumns = () => {
+            //this loop goes through the indices of the first row
+            for (let i=0; i<rowSize; i++){
+                let symbolsInColumn = 0 //variable to 
+                for (let j=0; j<rowSize; j++){
+                    //this loop calculates the index of thhe next item in the column
+                    //by adding the coulmn's start index i with a multiple (j) of the row size
+                    let played_symbol = spaces[(i + j*rowSize)]
+                    
+                    if (played_symbol === symbol){
+                        //if the symbol in the current space is the symbol we are looking for,
+                        //increment the counter
+                        symbolsInColumn++
+                    }else{
+                        //else set the count to 0
+                        symbolsInColumn = 0
+                    }
+        
+                    if (symbolsInColumn >= numberForWin){
+                        return true
+                    }
+                }
+        
+            }
+        
+            return false
+        }
+
+        const checkRows = () => {
+            //parse the array into rows
+            let rowStart = 0
+            for (let i=0; i<rowSize; i++){
+                let row = spaces.slice(rowStart, rowStart+rowSize)
+                rowStart += rowSize //get the start of the next row
+        
+                //count ouccrences of a symble in a row
+                //probably could use a higher order funciton
+                let symbolCounter = 0
+                for (let cell of row){
+                    if (cell === symbol){
+                        symbolCounter++
+                    } else{
+                        symbolCounter=0
+                    }
+        
+                    if(symbolCounter >= numberForWin){
+                        return true
+                    }
+                }
+        
+            }
+            return false
+        }
+
+
+        //check win conditions if there is one, return true
+        console.log(checkRows())
+        console.log(checkColumns())
+        if (checkRows() || checkColumns()){
+            return true
+        } else{
+            return false
+        }
+
     }
 
     const log = ()=>{
@@ -82,9 +156,9 @@ const gamePlay = function(){
         //so end the play here
         if (play === undefined){ return undefined}
 
-        if(gameboard.checkForWinner()){
+        if(gameboard.checkForWinner(currentPlayer.symbol)){
             gameView.gameOver(currentPlayer)
-            return
+            return currentPlayer.symbol
         }
 
         //change current player
@@ -94,10 +168,6 @@ const gamePlay = function(){
             currentPlayer = player1
         }
         
-
-
-
-        // console.log(currentPlayer)
         return play
     }
 
