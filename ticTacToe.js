@@ -111,10 +111,122 @@ const gameboard = function (){
         }
 
 
-        //check win conditions if there is one, return true
-        console.log(checkRows())
-        console.log(checkColumns())
-        if (checkRows() || checkColumns()){
+        const checkDiagnols = () => {
+            //this fuction makes me very sad. 
+
+            //checking top left to bottom right diagnols "\" shaped"
+
+            //parse into rows
+            let rowArray = []
+            let rowStart = 0
+            for (let i=0; i<rowSize; i++){
+                let row = spaces.slice(rowStart, rowStart+rowSize)
+                rowStart += rowSize //get the start of the next row
+                rowArray.push(row)
+            }
+            // console.log(rowArray)
+
+
+            //go through diagnols spawned from top row
+            for (let columnPointer=0; columnPointer<rowArray[0].length; columnPointer++){
+                let symbolsInDiagnol = 0
+                for (let rowPointer=0; rowPointer<rowArray.length; rowPointer++){
+                    let currentCell = rowArray[rowPointer][rowPointer+columnPointer]
+                    if (currentCell === symbol){
+                        symbolsInDiagnol++
+                    }else{
+                        symbolsInDiagnol = 0
+                    }
+                
+                    if (symbolsInDiagnol >= numberForWin){
+                        return true
+                    }
+                }
+            }
+
+            //go through diagnols spawned by first column
+            for (let rowPointer=1; rowPointer<rowArray.length; rowPointer++){
+                // console.log(rowArray[rowPointer])
+                let symbolsInDiagnol = 0;
+                for (let columnPointer=0; columnPointer<rowArray[0].length; columnPointer++){
+                    let currentRow = rowArray[rowPointer + columnPointer]
+                    
+                    if (currentRow === undefined){
+                        columnPointer = Infinity
+                    } else{
+                        let currentCell = currentRow[columnPointer]
+
+                        if (currentCell === symbol){
+                            symbolsInDiagnol++
+                        }else{
+                            symbolsInDiagnol = 0
+                        }
+                    
+                        if (symbolsInDiagnol >= numberForWin){
+                            return true
+                        }
+                    }
+                    
+                }
+            }
+
+            //checking anti diagnols ie from bottom left to top right '/' shaped
+            //go through anti diagnols spawned from the first column
+            for (let columnPointer = 0; columnPointer<rowArray.length; columnPointer++){
+                let symbolsInDiagnol = 0
+                for(let rowPointer = rowArray.length -1; rowPointer>=0; rowPointer--){
+                    let currentCell = rowArray[rowPointer][columnPointer - rowPointer]
+                    // console.log(currentCell)
+                    if (currentCell === symbol){
+                        symbolsInDiagnol++
+                    }else{
+                        symbolsInDiagnol = 0
+                    }
+                
+                    if (symbolsInDiagnol >= numberForWin){
+                        return true
+                    }
+                }
+            }
+
+
+            //i don't even know anymore
+            let x = 0
+            for (let columnPointer = rowArray.length-1; columnPointer>=0; columnPointer--){
+                let symbolsInDiagnol = 0
+                for(let rowPointer = 0; rowPointer<rowArray.length; rowPointer++){
+                    let y = rowArray.length - rowPointer + x
+                    let currentCell = rowArray[rowPointer][y]
+                    // console.log({rowPointer, y, currentCell})
+
+                    if (currentCell === symbol){
+                        symbolsInDiagnol++;
+                    }else{
+                        symbolsInDiagnol= 0;
+                    }
+
+                    if (symbolsInDiagnol >= numberForWin){
+                        return true
+                    }
+
+                }
+                // console.log()
+                x++
+            }
+
+            return undefined
+        }
+
+        let rowArray = []
+        let rowStart = 0
+        for (let i=0; i<rowSize; i++){
+            let row = spaces.slice(rowStart, rowStart+rowSize)
+            rowStart += rowSize //get the start of the next row
+            rowArray.push(row)
+        }
+
+        console.log(rowArray)
+        if (checkRows() || checkColumns() || checkDiagnols()){
             return true
         } else{
             return false
@@ -156,7 +268,9 @@ const gamePlay = function(){
         //so end the play here
         if (play === undefined){ return undefined}
 
+        console.log({space, play})
         if(gameboard.checkForWinner(currentPlayer.symbol)){
+            console.log("game should have ended")
             gameView.gameOver(currentPlayer)
             return currentPlayer.symbol
         }
